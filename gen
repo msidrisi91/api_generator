@@ -1,0 +1,9 @@
+#!/usr/bin/env node
+
+const input_data = require('./getinfo/model_input').input_data;
+const model_gen = require('./generators/model_gen');
+input_data()
+.then((a) => {
+    // console.log(a);
+    model_gen.generate(a);
+});
