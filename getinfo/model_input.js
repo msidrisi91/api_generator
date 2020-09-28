@@ -44,6 +44,7 @@ function input_data(){
                     type: 'input',
                     name: `field${i+1}_default`,
                     message: `What is the default value for field ${i+1} (if any): `,
+                    default: null,
                     when: function (ans) {
                         var f = 'field'+(j++)+'_required';
                         return !ans[f];
