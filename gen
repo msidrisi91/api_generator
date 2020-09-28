@@ -2,8 +2,10 @@
 
 const input_data = require('./getinfo/model_input').input_data;
 const model_gen = require('./generators/model_gen');
+const route_gen = require('./generators/route_gen');
 input_data()
 .then((a) => {
     // console.log(a);
     model_gen.generate(a);
+    route_gen.generate(a);
 });

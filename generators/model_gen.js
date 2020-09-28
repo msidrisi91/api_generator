@@ -1,11 +1,8 @@
-const fs = require('fs');
-
+const cp = require('../utils/grammar').capAndPlural;
+const writeModel = require('../utils/fileutil').writeModel;
 var header = `const mongoose = require('mongoose');
 const Schema = mongoose.Schema;\n\n`;
 
-function firstCapAndPlural(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1) + 's';
-}
 function generate(a) {
     var schema = 'const ' + a['name'] + 'Schema = new Schema({\n';
     var fields = a['fields'];
@@ -28,16 +25,10 @@ function generate(a) {
         schema = schema + tab + '}, {\n' + tab2 + 'timestamp: true\n';
     }
     schema = schema + tab + '}\n);\n\n'
-    schema = schema + 'var ' + firstCapAndPlural(a['name']) + " = mongoose.model('" + a['name'] + "', " + a['name'] + 'Schema);\n';
-    schema = schema + 'module.exports = ' + firstCapAndPlural(a['name']) + ';'
-    var dir = './models';
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
-    }
-    fs.writeFile(dir + '/' + a['name'] + 's.js', header + schema, function (err) {
-        if (err) throw err;
-        console.log('Saved!');
-    });
+    schema = schema + 'var ' + cp(a['name']) + " = mongoose.model('" ;
+    schema = schema + a['name'] + "', " + a['name'] + 'Schema);\n';
+    schema = schema + 'module.exports = ' + cp(a['name']) + ';'
+    writeModel(a['name'], header + schema);
 }
 
 module.exports.generate = generate;
