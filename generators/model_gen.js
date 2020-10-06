@@ -3,9 +3,9 @@ const writeModel = require('../utils/fileutil').writeModel;
 var header = `const mongoose = require('mongoose');
 const Schema = mongoose.Schema;\n\n`;
 
-function generate(a) {
-    var schema = 'const ' + a['name'] + 'Schema = new Schema({\n';
-    var fields = a['fields'];
+function generate(m, a) {
+    var schema = 'const ' + m['name'] + 'Schema = new Schema({\n';
+    var fields = m['fields'];
     var tab = '    ';
     var tab2 = tab + tab;
     var tab3 = tab2 + tab;
@@ -21,14 +21,14 @@ function generate(a) {
             schema = schema + tab3 + "default: '"+fields[f]+"'\n" + tab2 + '},\n';
         }
     });
-    if(a['timestamp']){
+    if(m['timestamp']){
         schema = schema + tab + '}, {\n' + tab2 + 'timestamp: true\n';
     }
     schema = schema + tab + '}\n);\n\n'
-    schema = schema + 'var ' + cp(a['name']) + " = mongoose.model('" ;
-    schema = schema + a['name'] + "', " + a['name'] + 'Schema);\n';
-    schema = schema + 'module.exports = ' + cp(a['name']) + ';'
-    writeModel(a['name'], header + schema);
+    schema = schema + 'var ' + cp(m['name']) + " = mongoose.model('" ;
+    schema = schema + m['name'] + "', " + m['name'] + 'Schema);\n';
+    schema = schema + 'module.exports = ' + cp(m['name']) + ';'
+    writeModel(m['name'], header + schema);
 }
 
 module.exports.generate = generate;

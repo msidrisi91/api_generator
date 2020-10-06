@@ -1,7 +1,7 @@
 const cp = require('../utils/grammar').capAndPlural;
 const writeRoute = require('../utils/fileutil').writeRoute;
-function generate(a){
-    var name = a['name'];
+function generate(m, a){
+    var name = m['name'];
     var route = `const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');

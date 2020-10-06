@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
-function input_data(){
+function input_data(i){
+    console.info(`\nEnter the detils of model ${i} :`);
     var questions = [{
             type: 'input',
             name: 'name',
@@ -57,7 +58,6 @@ function input_data(){
                 return answers;
             })
             .catch(error => {
-
                 console.log(error);
             });
         }
