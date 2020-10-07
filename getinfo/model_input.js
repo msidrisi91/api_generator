@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
-function input_data(i){
-    console.info(`\nEnter the detils of model ${i} :`);
+function input_data(i, auth){
+    console.info(`\nEnter the details of model ${i} :`);
     var questions = [{
             type: 'input',
             name: 'name',
@@ -16,12 +16,41 @@ function input_data(i){
             choices: {checked: true}
         }
     ]
+
     return inquirer.prompt(questions)
     .then(answers => {
         if (answers['n'] <= 0){
             console.log('There must be atleast 1 field');
         } else {
             var fields_prompts = [];
+            if(auth) {
+                fields_prompts.push({
+                    type : 'checkbox',
+                    name : 'auth',
+                    message : 'Select the routes to be accesed after authentication:',
+                    choices: [
+                        'GET /' + answers['name'] +'/',
+                        'POST /' + answers['name'] +'/',
+                        'DELETE /' + answers['name'] +'/',
+                        'GET /' + answers['name'] +'/:' + answers['name'] + 'Id',
+                        'PUT /' + answers['name'] +'/:' + answers['name'] + 'Id',
+                        'DELETE /' + answers['name'] +'/:' + answers['name'] + 'Id',
+                    ]
+                });
+                fields_prompts.push({
+                    type : 'confirm',
+                    name : 'userPOST',
+                    message : "Do you want to record which user POST this model:"
+                });
+                fields_prompts.push({
+                    type : 'confirm',
+                    name : 'userGET',
+                    message : "Do you want to restrict user to GET only data POSTed by them :",
+                    when: function (ans) {
+                        return ans['userPOST'] && ans['auth'].includes('GET /' + answers['name'] +'/');
+                    }
+                });
+            }
             var j = 1;
             for(var i = 0; i < answers['n']; i++){
                 fields_prompts.push({

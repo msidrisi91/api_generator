@@ -13,6 +13,11 @@ function input_data(){
             name: 'authentication',
             message: "Do you want to enable user authentication? ",
             choices: {checked: true}
+        }, {
+            type: 'confirm',
+            name: 'cors',
+            message: "Do you want to enable cross origin resources? ",
+            choices: {checked: true}
         }
     ]
     return inquirer.prompt(questions)

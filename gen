@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-// const iui = require('inquirer').ui;
 
 const get_api_data = require('./getinfo/api_input').input_data;
 const get_model_data = require('./getinfo/model_input').input_data;
@@ -10,7 +9,7 @@ get_api_data()
 .then(async(a) => {
     var model_names = [];
     for(var i = 1; i <= a['n']; i++) {
-        m = await get_model_data(i)
+        m = await get_model_data(i, a['authentication'])
         model_names.push(m['name']);
         model_gen.generate(m, a);
         route_gen.generate(m, a);

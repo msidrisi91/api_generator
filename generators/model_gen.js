@@ -21,6 +21,12 @@ function generate(m, a) {
             schema = schema + tab3 + "default: '"+fields[f]+"'\n" + tab2 + '},\n';
         }
     });
+    if(m['fields']['userPOST']) {
+        schema = schema + tab2 + `author: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        },\n`;
+    }
     if(m['timestamp']){
         schema = schema + tab + '}, {\n' + tab2 + 'timestamp: true\n';
     }
@@ -28,7 +34,7 @@ function generate(m, a) {
     schema = schema + 'var ' + cp(m['name']) + " = mongoose.model('" ;
     schema = schema + m['name'] + "', " + m['name'] + 'Schema);\n';
     schema = schema + 'module.exports = ' + cp(m['name']) + ';'
-    writeModel(m['name'], header + schema);
+    writeModel(m['name'], a['name'], header + schema);
 }
 
 module.exports.generate = generate;
