@@ -16,7 +16,7 @@ module.exports.writeRoute = function(name, api, string) {
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir, { recursive: true });
     }
-    fs.writeFile(path.join(dir, name + 'Router.js'), string, function (err) {
+    fs.writeFile(path.join(dir, name + 'Route.js'), string, function (err) {
         if (err) throw err;
         // console.log(`${name}Router.js router created!!`);
     }); 

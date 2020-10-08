@@ -1,6 +1,6 @@
 const cp = require('../utils/grammar').capAndPlural;
 const writeRoute = require('../utils/fileutil').writeRoute;
-// TODO: add cors file generation in gen
+// TODO: isauth to be modified
 function isauth(isallauth, prototype, authlist){
     if(isallauth) {
         type = prototype[0];
@@ -13,6 +13,7 @@ function isauth(isallauth, prototype, authlist){
     }
     return '';
 }
+
 function generate(m, a){
     var iscors = '';
     var route = '';
@@ -40,30 +41,30 @@ function generate(m, a){
     if (m['fields']['userPOST']) {
         postnID = `.post(${iscors}${isauth(isallauth, ['POST', false], m['fields']['auth'])}(req, res, next) => {
     ${cp(name)}.findById(req.body._id)
-        .then((${name}) => {
-            if (${name} == null) {
-                let new${name} = {};
-                new${name}.user = req.user._id;
-                ${cp(name)}.create(new${name})
+    .then((${name}) => {
+        if (${name} == null) {
+            let new${name} = {};
+            new${name}.user = req.user._id;
+            ${cp(name)}.create(new${name})
+            .then((${name}) => {
+                ${name}.${cp(name).toLowerCase()}.push(req.params.${name}Id)
+                ${name}.save()
+                .then((${name}) => {
+                    ${cp(name)}.findById(${name}._id)
                     .then((${name}) => {
-                        ${name}.${cp(name).toLowerCase()}.push(req.params.${name}Id)
-                        ${name}.save()
-                            .then((${name}) => {
-                                ${cp(name)}.findById(${name}._id)
-                                    .then((${name}) => {
-                                        res.statusCode = 200;
-                                        res.setHeader('Content-Type', 'application/json');
-                                        res.json(${name});
-                                    })
-                            }, (err) => next(err));
-                    }, (err) => next(err))
-                    .catch((err) => next(err));
-            } else {
-                err = new Error('${cp(name)} ' + req.params.${name}Id + ' already exist');
-                err.status = 404;
-                return next(err);
-            }
-        })
+                        res.statusCode = 200;
+                        res.setHeader('Content-Type', 'application/json');
+                        res.json(${name});
+                    })
+                }, (err) => next(err));
+            }, (err) => next(err))
+            .catch((err) => next(err));
+        } else {
+            err = new Error('${cp(name)} ' + req.params.${name}Id + ' already exist');
+            err.status = 404;
+            return next(err);
+        }
+    })
 })`;
     }
 
@@ -82,17 +83,17 @@ function generate(m, a){
         getnID = `${name}Router.route('/')
 .get(${iscors}${isauth(isallauth, ['GET', false], m['fields']['auth'])}(req, res, next) => {
     ${cp(name)}.findById(req.params.${name}Id)
-        .then((${name}) => {
-            if (!(${name}.user.equals(req.user._id))) {
-                var err = new Error('Only creator can perform this');
-                err.status = 401;
-                return next(err);
-            }
-            res.statusCode = 200;
-            res.setHeader('Content-Type', 'application/json');
-            res.json(favorite);
-        }, (err) => next(err))
-        .catch((err) => next(err));
+    .then((${name}) => {
+        if (!(${name}.user.equals(req.user._id))) {
+            var err = new Error('Only creator can perform this');
+            err.status = 401;
+            return next(err);
+        }
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(favorite);
+    }, (err) => next(err))
+    .catch((err) => next(err));
 })`;
     }
 

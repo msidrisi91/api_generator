@@ -1,15 +1,12 @@
 {
-  "name": "node",
-  "version": "1.0.0",
-  "description": "",
-  "main": "gen",
+  "name": "api-generator",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index"
+    "start": "node ./bin/www"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "extract-zip": "^2.0.1",
     "inquirer": "^7.3.3"
   }
 }
