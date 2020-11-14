@@ -2,16 +2,30 @@ const cp = require('../utils/grammar').capAndPlural;
 const writeRoute = require('../utils/fileutil').writeRoute;
 // TODO: isauth to be modified
 function isauth(isallauth, prototype, authlist){
+    var temp = false;
+    console.log("**********************************************************\n");
+    console.log(isallauth);
+    console.log(prototype);
+    console.log(authlist);
     if(isallauth) {
         type = prototype[0];
         isID = prototype[1];
+        console.log(type);
+        console.log(isID);
         authlist.forEach(element => {
-            if(element.substring(0, 2) === type && ((isID && element.includes(':')) || (!isID && !element.includes(':')))) {
-                return 'authenticate.verifyUser, ';
+            console.log(element);
+            console.log(element.includes(type) && ((isID && element.includes(':')) || (!isID && !element.includes(':'))));
+            console.log(element.includes(type));
+            console.log("**********************************************************\n");
+            if(element.includes(type) && ((isID && element.includes(':')) || (!isID && !element.includes(':')))) {
+                console.log('\n:p\n');
+                // return 'authenticate.verifyUser, ';
+                temp = true;
             }
         });    
     }
-    return '';
+    if(temp) return 'authenticate.verifyUser, ';
+    else return '';
 }
 
 function generate(m, a){
@@ -27,7 +41,7 @@ function generate(m, a){
         route = route + "const authenticate = require('../authenticate');\n";
     }
     var name = m['name'];
-    var postnID = `.post(${iscors}${isauth(isallauth, ['POST', false], m['fields']['auth'])}(req, res, next) => {
+    var postnID = `.post(${iscors + isauth(isallauth, ['POST', false], m['fields']['auth'])} (req, res, next) => {
     ${cp(name)}.create(req.body)
     .then((${name}) => {
         console.log('${name} Created ', ${name});
@@ -39,7 +53,7 @@ function generate(m, a){
 })`;
 
     if (m['fields']['userPOST']) {
-        postnID = `.post(${iscors}${isauth(isallauth, ['POST', false], m['fields']['auth'])}(req, res, next) => {
+        postnID = `.post(${iscors + isauth(isallauth, ['POST', false], m['fields']['auth'])}(req, res, next) => {
     ${cp(name)}.findById(req.body._id)
     .then((${name}) => {
         if (${name} == null) {
@@ -69,7 +83,7 @@ function generate(m, a){
     }
 
     var getnID = `${name}Router.route('/')
-.get(${iscors}${isauth(isallauth, ['GET', false], m['fields']['auth'])}(req,res,next) => {
+.get(${iscors + isauth(isallauth, ['GET', false], m['fields']['auth'])}(req,res,next) => {
     ${cp(name)}.find({})
     .then((${name}s) => {
         res.statusCode = 200;
@@ -81,7 +95,7 @@ function generate(m, a){
 
     if(m['fields']['userGET']) {
         getnID = `${name}Router.route('/')
-.get(${iscors}${isauth(isallauth, ['GET', false], m['fields']['auth'])}(req, res, next) => {
+.get(${iscors + isauth(isallauth, ['GET', false], m['fields']['auth'])}(req, res, next) => {
     ${cp(name)}.findById(req.params.${name}Id)
     .then((${name}) => {
         if (!(${name}.user.equals(req.user._id))) {
@@ -108,7 +122,7 @@ ${name}Router.use(bodyParser.json());
 
 ${getnID}
 ${postnID}
-.delete(${iscors}${isauth(isallauth, ['DELETE', false], m['fields']['auth'])}(req, res, next) => {
+.delete(${iscors + isauth(isallauth, ['DELETE', false], m['fields']['auth'])}(req, res, next) => {
     ${cp(name)}.remove({})
     .then((resp) => {
         res.statusCode = 200;
@@ -119,7 +133,7 @@ ${postnID}
 });
     
 ${name}Router.route('/:${name}Id')
-.get(${iscors}${isauth(isallauth, ['GET', true], m['fields']['auth'])}(req,res,next) => {
+.get(${iscors + isauth(isallauth, ['GET', true], m['fields']['auth'])}(req,res,next) => {
     ${cp(name)}.findById(req.params.${name}Id)
     .then((${name}) => {
         res.statusCode = 200;
@@ -128,7 +142,7 @@ ${name}Router.route('/:${name}Id')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.put(${iscors}${isauth(isallauth, ['PUT', true], m['fields']['auth'])}(req, res, next) => {
+.put(${iscors + isauth(isallauth, ['PUT', true], m['fields']['auth'])}(req, res, next) => {
     ${cp(name)}.findByIdAndUpdate(req.params.${name}Id, {
         $set: req.body
     }, { new: true })
@@ -139,7 +153,7 @@ ${name}Router.route('/:${name}Id')
     }, (err) => next(err))
     .catch((err) => next(err));
 })
-.delete(${iscors}${isauth(isallauth, ['DELETE', true], m['fields']['auth'])}(req, res, next) => {
+.delete(${iscors + isauth(isallauth, ['DELETE', true], m['fields']['auth'])}(req, res, next) => {
     ${cp(name)}.findByIdAndRemove(req.params.${name}Id)
     .then((resp) => {
         res.statusCode = 200;
