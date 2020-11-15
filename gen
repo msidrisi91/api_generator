@@ -6,17 +6,20 @@ const efeditor = require('./utils/expressfileeditor');
 const ee = require('./utils/extractexpress');
 const model_gen = require('./generators/model_gen');
 const route_gen = require('./generators/route_gen');
-
+const doc_gen = require('./generators/doc_gen');
 get_api_data()
 .then(async(a) => {
     await ee.generate(a['name'], a['authentication'], a['cors']);
     var model_names = [];
+    var documentation = [];
     for(var i = 1; i <= a['n']; i++) {
         m = await get_model_data(i, a['authentication'])
         model_names.push(m['name']);
         model_gen.generate(m, a);
         route_gen.generate(m, a);
+        documentation.push(doc_gen.get_value(m, a));
     }
+    doc_gen.generate(documentation);
     efeditor.edit(model_names, a['name']);
 })
 
