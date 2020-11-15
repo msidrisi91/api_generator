@@ -46,7 +46,7 @@ ${get_response}
                     <br><br>
                     
                     <strong>3. DELETE '/${model}/' :</strong><br>
-                    <strong>&nbsp; &nbsp; &nbsp;response body:</strong> "Respones from the MongoDB server"
+                    <strong>&nbsp; &nbsp; &nbsp;response body:</strong> "Response from the MongoDB server"
                     <br><br>
                     
                     <strong>4. GET '/${model}/:${model}Id' (list of all users):</strong><br>
