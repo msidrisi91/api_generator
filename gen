@@ -17,9 +17,8 @@ get_api_data()
         model_names.push(m['name']);
         model_gen.generate(m, a);
         route_gen.generate(m, a);
-        documentation.push(doc_gen.get_value(m, a));
+        documentation.push(doc_gen.get_value(i, m, a));
     }
-    doc_gen.generate(documentation);
-    efeditor.edit(model_names, a['name']);
+    efeditor.edit(model_names, a['name'], documentation);
 })
 

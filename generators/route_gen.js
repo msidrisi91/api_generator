@@ -3,23 +3,13 @@ const writeRoute = require('../utils/fileutil').writeRoute;
 // TODO: isauth to be modified
 function isauth(isallauth, prototype, authlist){
     var temp = false;
-    console.log("**********************************************************\n");
-    console.log(isallauth);
-    console.log(prototype);
-    console.log(authlist);
     if(isallauth) {
         type = prototype[0];
         isID = prototype[1];
         console.log(type);
         console.log(isID);
         authlist.forEach(element => {
-            console.log(element);
-            console.log(element.includes(type) && ((isID && element.includes(':')) || (!isID && !element.includes(':'))));
-            console.log(element.includes(type));
-            console.log("**********************************************************\n");
             if(element.includes(type) && ((isID && element.includes(':')) || (!isID && !element.includes(':')))) {
-                console.log('\n:p\n');
-                // return 'authenticate.verifyUser, ';
                 temp = true;
             }
         });    
